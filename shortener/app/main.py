@@ -8,5 +8,5 @@ app = FastAPI()
 #     return {"shortened_url": ""}
 
 @app.get("/decode")
-async def decode():
+async def decode() -> dict[str, str]:
     return {"original_url": ""}

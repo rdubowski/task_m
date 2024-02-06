@@ -1,3 +1,4 @@
+from typing import Generator, Iterator
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -13,7 +14,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 
 @pytest.fixture(scope="package")
-def session() -> Session:
+def session() -> Iterator[Session]:
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
@@ -24,8 +25,8 @@ def session() -> Session:
 
 
 @pytest.fixture(scope="package")
-def client(session: Session) -> TestClient:
-    def override_get_db() -> Session:
+def client(session: Session) -> Iterator[TestClient]:
+    def override_get_db() -> Iterator[Session]:
         try:
             yield session
         finally:
