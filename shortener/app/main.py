@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
 from app.db.database import Base, engine, get_db
-from app.db.schemas import UrlCreate, Url
+from app.db.schemas import UrlCreate, Url, UrlGet
 from app.crud.url import create_url, get_by_shortened_url, get_by_base_url
 from app.services.url_validator import validate_url
 from app.services.url_shortener import md5_shortener_context
 from fastapi import status
+
+URL_NOT_FOUND_MESSAGE = "Url not found"
 
 
 
@@ -27,9 +29,12 @@ def encode(url: UrlCreate, db: Session = Depends(get_db)) -> UrlCreate:
     return db_url
 
 
-@app.get("/decode/{shortened_url}", response_model=Url)
-def decode( shortened_url: str, db: Session = Depends(get_db),) -> Url:
-    db_url = get_by_shortened_url(db, id=id, user_id=shortened_url)
+@app.post("/decode/", response_model=Url)
+def decode(url: UrlGet, db: Session = Depends(get_db)) -> Url:
+    shortened_url = url.shortened_url
+    validate_url(shortened_url)
+    db_url = get_by_shortened_url(db, shortened_url=shortened_url)
     if db_url is None:
-        raise HTTPException(status_code=404, detail="Url not found")
+        raise HTTPException(status_code=404, detail=URL_NOT_FOUND_MESSAGE)
     return db_url
+

@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.db.models import Url
 from app.services.url_shortener import md5_shortener_context
 from app.services.url_validator import INVALID_URL_MESSAGE
+from app.main import URL_NOT_FOUND_MESSAGE
 
 
 
@@ -61,17 +62,35 @@ class TestEncode:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.json()["detail"] == INVALID_URL_MESSAGE
+        
 
 
 
+class TestDecode:
+        
+    @pytest.fixture(autouse=True)
+    def _setup(self):
+        self.base_url = "https://en.wikipedia.org/wiki/Laptop"
+
+    def test_decode_existing_url(self, client: TestClient, session: Session) -> None:
+        url = url_factory(session, self.base_url)
+
+        response = client.post('/decode/', json={"shortened_url": url.shortened_url})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["base_url"] == url.base_url
+        assert response.json()["shortened_url"] == url.shortened_url
+
+    def test_decode_invalid_url(self, client: TestClient, session: Session) -> None:
+        response = client.post('/decode/', json={"shortened_url": "nonexistent_url"})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.json()["detail"] == INVALID_URL_MESSAGE
 
 
+    def test_decode_nonexistent_url(self, client: TestClient, session: Session) -> None:
+        response = client.post('/decode/', json={"shortened_url": "https://en.wikipedia.org/wiki/Computer"})
 
-# def test_decode(client: TestClient, session: Session) -> None:
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.json()["detail"] == URL_NOT_FOUND_MESSAGE
 
-#     url_db = url_factory(session)
-#     breakpoint()
-#     response = client.get(f"/decode/po_co")
-#     breakpoint()
-#     assert response.status_code == status.HTTP_200_OK
-    
