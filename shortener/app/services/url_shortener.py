@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import TypeAlias
 
 DEFAULT_URL_START = "http://short.est/"
+DEFAULT_HASH_LENGTH = 6
 
 BaseUrl: TypeAlias = str
 ShortenedUrl: TypeAlias = str
@@ -25,9 +26,13 @@ class Md5Strategy(ShortenerStrategy):
 class ShortenContext:
     strategy: ShortenerStrategy
     url_start: str = DEFAULT_URL_START
-    hash_length: int = 6
+    hash_length: int = DEFAULT_HASH_LENGTH
 
     def shorten_url(self, base_url: BaseUrl) -> ShortenedUrl:
+        """
+        Shortens the given base URL by
+        encoding it and appending it to the url_start parameter.
+        """
         if not base_url:
             raise ValueError("Empty base_url")
         encoded_part = self.strategy.encode(
