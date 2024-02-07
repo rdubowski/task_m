@@ -6,12 +6,26 @@ from app.db.database import Base, engine, get_db
 from app.db.schemas import Url, UrlCreate, UrlGet
 from app.services.url_shortener import md5_shortener_context
 from app.services.url_validator import validate_url
+from fastapi.middleware.cors import CORSMiddleware
 
 URL_NOT_FOUND_MESSAGE = "Url not found"
 
+origins = [
+    "http://localhost:3000",
+    "http://localhost",
+    "http://localhost:8080",
+]
 
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 Base.metadata.create_all(bind=engine)
 
