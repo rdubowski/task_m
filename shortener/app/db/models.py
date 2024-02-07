@@ -1,6 +1,8 @@
 from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from .database import Base
-from sqlalchemy.orm import mapped_column, Mapped
+
 
 class Url(Base):
     __tablename__ = "urls"

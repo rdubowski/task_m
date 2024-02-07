@@ -1,13 +1,11 @@
 # type: ignore
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
-from app.db.models import Base, Url
-from app.db.connectors import connect_to_local_db
+from sqlalchemy import engine_from_config, pool
 
+from app.db.connectors import connect_to_local_db
+from app.db.models import Base, Url
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,6 +18,7 @@ if config.config_file_name is not None:
 
 
 target_metadata = Base.metadata
+
 
 def run_migrations_online() -> None:
 

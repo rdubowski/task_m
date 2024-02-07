@@ -1,12 +1,13 @@
-from typing import Generator, Iterator
+from typing import Iterator
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.db.connectors import SQLALCHEMY_DATABASE_URL
 from app.db.database import Base, get_db
 from app.main import app
-from app.db.connectors import SQLALCHEMY_DATABASE_URL
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

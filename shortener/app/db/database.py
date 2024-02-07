@@ -1,9 +1,9 @@
 from typing import Iterator
+
 from sqlalchemy import Column, DateTime, func
 from sqlalchemy.orm import Session, declarative_base
 
 from app.db.connectors import connect_to_local_db
-
 
 engine, SessionLocal = connect_to_local_db()
 
