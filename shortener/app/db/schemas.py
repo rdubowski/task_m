@@ -5,7 +5,7 @@ class UrlCreate(BaseModel):
     base_url: str
 
 
-class UrlGet(BaseModel):
+class UrlGet(BaseModel): # should be UrlRead
     shortened_url: str
 
 
