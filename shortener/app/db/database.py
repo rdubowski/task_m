@@ -1,7 +1,6 @@
 from typing import Iterator
 from sqlalchemy import Column, DateTime, func
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, declarative_base
 
 from app.db.connectors import connect_to_local_db
 
@@ -17,6 +16,6 @@ def get_db() -> Iterator[Session]:
         db.close()
 
 
-class Base(declarative_base()):  # type: ignore[misc]
+class Base(declarative_base()):
     __abstract__ = True
     created_at = Column(DateTime(timezone=True), default=func.now())

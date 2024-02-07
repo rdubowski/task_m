@@ -1,12 +1,35 @@
-from fastapi import FastAPI
+from sqlalchemy.orm import Session
+from fastapi import Depends, FastAPI, HTTPException
+from app.db.database import Base, engine, get_db
+from app.db.schemas import UrlCreate, Url
+from app.crud.url import create_url, get_by_shortened_url, get_by_base_url
+from app.services.url_validator import validate_url
+from app.services.url_shortener import md5_shortener_context
+from fastapi import status
+
+
 
 app = FastAPI()
 
 
-# @app.post("/encode")
-# def encode():
-#     return {"shortened_url": ""}
+Base.metadata.create_all(bind=engine)
 
-@app.get("/decode")
-async def decode() -> dict[str, str]:
-    return {"original_url": ""}
+
+@app.post("/encode/", response_model=Url, status_code=status.HTTP_201_CREATED)
+def encode(url: UrlCreate, db: Session = Depends(get_db)) -> UrlCreate:
+    base_url = url.base_url
+    validate_url(base_url)
+    existent_url = get_by_base_url(db=db, base_url=base_url)
+    if existent_url:
+        return existent_url
+    shortened_url = md5_shortener_context.shorten_url(base_url)
+    db_url = create_url(db=db, base_url=base_url, shortened_url=shortened_url)
+    return db_url
+
+
+@app.get("/decode/{shortened_url}", response_model=Url)
+def decode( shortened_url: str, db: Session = Depends(get_db),) -> Url:
+    db_url = get_by_shortened_url(db, id=id, user_id=shortened_url)
+    if db_url is None:
+        raise HTTPException(status_code=404, detail="Url not found")
+    return db_url
