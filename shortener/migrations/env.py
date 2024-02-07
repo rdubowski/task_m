@@ -21,7 +21,6 @@ target_metadata = Base.metadata
 
 
 def run_migrations_online() -> None:
-
     connectable, session = connect_to_local_db()
 
     with connectable.connect() as connection:

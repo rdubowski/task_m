@@ -16,6 +16,6 @@ def get_db() -> Iterator[Session]:
         db.close()
 
 
-class Base(declarative_base()):
+class Base(declarative_base()):  # type: ignore[misc]
     __abstract__ = True
     created_at = Column(DateTime(timezone=True), default=func.now())

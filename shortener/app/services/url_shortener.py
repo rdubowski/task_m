@@ -1,17 +1,17 @@
 import hashlib
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import NewType
+from typing import TypeAlias
 
 DEFAULT_URL_START = "http://short.est/"
 
-BaseUrl = NewType("BaseUrl", str)
-ShortenedUrl = NewType("ShortenedUrl", str)
+BaseUrl: TypeAlias = str
+ShortenedUrl: TypeAlias = str
 
 
 class ShortenerStrategy(ABC):
     @abstractmethod
-    def encode(self, base_url: BaseUrl) -> ShortenedUrl:
+    def encode(self, base_url: BaseUrl, hash_length: int) -> ShortenedUrl:
         pass
 
 

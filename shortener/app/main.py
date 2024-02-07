@@ -1,12 +1,12 @@
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from app.crud.url import create_url, get_by_base_url, get_by_shortened_url
 from app.db.database import Base, engine, get_db
-from app.db.schemas import Url, UrlCreate, UrlGet
+from app.db.schemas import Url, UrlCreate, UrlDecode
 from app.services.url_shortener import md5_shortener_context
 from app.services.url_validator import validate_url
-from fastapi.middleware.cors import CORSMiddleware
 
 URL_NOT_FOUND_MESSAGE = "Url not found"
 
@@ -43,7 +43,7 @@ def encode(url: UrlCreate, db: Session = Depends(get_db)) -> UrlCreate:
 
 
 @app.post("/decode/", response_model=Url)
-def decode(url: UrlGet, db: Session = Depends(get_db)) -> Url:
+def decode(url: UrlDecode, db: Session = Depends(get_db)) -> Url:
     shortened_url = url.shortened_url
     validate_url(shortened_url)
     db_url = get_by_shortened_url(db, shortened_url=shortened_url)

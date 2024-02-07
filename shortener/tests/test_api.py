@@ -24,9 +24,8 @@ def url_factory(session: Session, base_url: str) -> Url:
 
 
 class TestEncode:
-
     @pytest.fixture(autouse=True)
-    def _setup(self):
+    def _setup(self) -> None:
         self.base_url = "https://en.wikipedia.org/wiki/Computer"
 
     def test_create(self, client: TestClient, session: Session) -> None:
@@ -64,9 +63,8 @@ class TestEncode:
 
 
 class TestDecode:
-
     @pytest.fixture(autouse=True)
-    def _setup(self):
+    def _setup(self) -> None:
         self.base_url = "https://en.wikipedia.org/wiki/Laptop"
 
     def test_decode_existing_url(self, client: TestClient, session: Session) -> None:
