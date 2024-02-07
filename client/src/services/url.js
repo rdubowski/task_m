@@ -1,5 +1,7 @@
 import axios from "axios";
 
+
+
 export const encodeUrl = async (base_url) => {
     const url = "http://localhost:8004/encode/";
     const data = {"base_url": base_url};
@@ -22,7 +24,6 @@ export const encodeUrl = async (base_url) => {
       const response = await axios.post(url, data, {
         "Content-Type": "application/json",
       });
-      console.log(response)
       return response.data.base_url
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error);
