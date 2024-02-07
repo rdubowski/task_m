@@ -1,15 +1,34 @@
 # task_m
 
 ## Prerequisites
-Before start you need docker and docker-compose
+Before you start, make sure you have the following installed on your machine:
+- Docker
+- Docker Compose
 
-## Setup:
+## Setup
+To set up the project, follow these steps:
 
-Start with docker-compose 
-`docker-compose up -d --build`
+1. Clone the repository:
 
-Api exposed on: `http://localhost:8004/`
-Frontend exposed on: `http://localhost:3000/`
+2. Navigate to the project directory:
 
-## Runing tests:
-`docker-compose exec web pytest`
+3. Build and start the containers using Docker Compose:
+    ```shell
+    docker-compose up -d --build
+    ```
+
+4. Once the containers are up and running, you can access the API at:
+    ```
+    http://localhost:8004/
+    ```
+
+    And the frontend at:
+    ```
+    http://localhost:3000/
+    ```
+
+## Running Tests
+To run the tests, you need to:
+    ```
+    docker-compose exec web pytest
+    ```
